@@ -1,0 +1,105 @@
+$schema: https://adapt2.sis.pitt.edu/cupcake/schemas/code-completion/0.1.0
+source: TopScorer.java
+license: MIT
+locale: en-US
+id: cc_aoo_top_scorer_null_start
+title: Find the Top Scorer, or Return null
+description: Complete a max-search over a sparse Player[] that starts from null, skips empty slots, and returns null for an empty team.
+authors:
+- first: Aum
+  last: Pandya
+  email: apandya4@ncsu.edu
+  affiliation: North Carolina State University
+pedagogy:
+  activity: code-completion
+  difficulty: intermediate
+  prereq_topics:
+  - arrays
+  - classes
+  - constructors
+  topics:
+  - arrays-of-objects
+  - null-references
+  - null-checks
+  - linear-search
+runtime:
+  language: java
+  version: 17
+statement: |
+  `findTop` should return the `Player` with the most points, skipping empty slots.
+  If the team has **no players at all**, it should return `null`.
+  Complete the three blanks.
+hints:
+- Before you have looked at any player, what should `best` refer to?
+- When you reach an empty slot, you want to move on to the **next** index, not stop the whole search.
+testcases:
+- title: Sparse team and empty team
+  visible: true
+  stdin: []
+  stdout: |-
+    Top scorer: Jordan
+    Empty team result: null
+  console: |-
+    Top scorer: Jordan
+    Empty team result: null
+  status: pass
+  feedback:
+    on_pass:
+    - best starts as null, continue skips empty slots, and the best == null test handles the first real player.
+    on_fail:
+    - Either a NullPointerException occurred or the empty team did not produce null. Re-check how best starts and how empty slots are skipped.
+elements:
+- type: blank
+  location:
+    context: Player best = null;
+    snippet: 'null'
+    nth: 1
+  choices:
+  - snippet: 'null'
+    role: solution
+    explanations:
+    - body: Correct! `null` means "no best player yet", and it is exactly what an empty team should return.
+  - snippet: new Player("", 0)
+    role: distractor
+    explanations:
+    - body: Incorrect. A dummy player is never `null`, so the empty team returns this dummy object and prints something like `Player@1b6d3586` instead of `null`.
+  - snippet: team[team.length]
+    role: distractor
+    explanations:
+    - body: Incorrect. The last valid index is `team.length - 1`, so this throws an `ArrayIndexOutOfBoundsException`.
+- type: blank
+  location:
+    context: continue;
+    snippet: continue
+    nth: 1
+  choices:
+  - snippet: continue
+    role: solution
+    explanations:
+    - body: Correct! `continue` skips this empty slot and goes on to the next index.
+  - snippet: break
+    role: distractor
+    explanations:
+    - body: Incorrect. `team[0]` is `null`, so `break` ends the loop immediately. `findTop` returns `null`, and `top.name` in `main` throws a `NullPointerException`.
+  - snippet: return null
+    role: distractor
+    explanations:
+    - body: Incorrect. This gives up at the first empty slot (index 0), so the caller receives `null` and `top.name` crashes.
+- type: blank
+  location:
+    context: if (best == null || team[i].points > best.points) {
+    snippet: best == null
+    nth: 1
+  choices:
+  - snippet: best == null
+    role: solution
+    explanations:
+    - body: Correct! The first real player becomes `best` automatically, and `||` short-circuits so `best.points` is never read while `best` is `null`.
+  - snippet: best != null
+    role: distractor
+    explanations:
+    - body: Incorrect. On the first real player, `best` is still `null`, so the left side is `false` and `best.points` runs on `null`, which throws a `NullPointerException`.
+  - snippet: team[i] == null
+    role: distractor
+    explanations:
+    - body: Incorrect. Here `team[i]` is never `null` (the `continue` already skipped those slots), so Java evaluates `best.points` while `best` is still `null` and throws.

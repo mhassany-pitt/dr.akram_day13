@@ -1,0 +1,66 @@
+$schema: https://adapt2.sis.pitt.edu/cupcake/schemas/parameterized-code-tracing/0.1.0
+source: Initials.java
+license: MIT
+locale: en-US
+id: pct_aoo_initials_null_slots
+title: Trace Initials Built from a Sparse String Array
+description: Trace a loop that guards against null before calling String methods, as the stored word and its slot vary.
+authors:
+- first: Aum
+  last: Pandya
+  email: apandya4@ncsu.edu
+  affiliation: North Carolina State University
+pedagogy:
+  activity: parameterized-code-tracing
+  difficulty: intermediate
+  prereq_topics:
+  - arrays
+  - classes
+  - constructors
+  topics:
+  - arrays-of-objects
+  - null-references
+  - null-checks
+  - state-tracing
+runtime:
+  language: java
+  version: 17
+statement: |
+  Trace the program and give its exact output.
+  Each non-null slot adds its uppercase first letter; each `null` slot adds `_`.
+hints:
+- 'Write out all 4 slots of `bank` first: which ones are still `null`?'
+- The `!= null` check keeps `toUpperCase()` from ever being called on `null`.
+testcases:
+- title: Initials trace
+  visible: true
+  stdin: []
+  stdout: |-
+    A_K_
+    Words stored: 2
+  console: |-
+    A_K_
+    Words stored: 2
+  status: pass
+  feedback:
+    on_pass:
+    - Correct! You tracked which slots were null and built the initials string in index order.
+    on_fail:
+    - List the contents of bank[0] through bank[3] before tracing the loop. Unassigned slots are null.
+elements:
+- type: parameter
+  location:
+    context: int slot = 2;
+    snippet: '2'
+  values:
+  - 1
+  - 2
+  - 3
+- type: parameter
+  location:
+    context: bank[slot] = "kiwi";
+    snippet: kiwi
+  values:
+  - fig
+  - kiwi
+  - mango

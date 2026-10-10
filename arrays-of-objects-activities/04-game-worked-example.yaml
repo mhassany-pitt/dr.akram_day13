@@ -1,0 +1,90 @@
+$schema: https://adapt2.sis.pitt.edu/cupcake/schemas/worked-example/0.1.0
+source: GameTokens.java
+license: MIT
+locale: en-US
+id: we_array_objects_game
+title: "Game Tokens: Sharing an Object"
+description: See how sharing a Token differs from creating a new one.
+authors: []
+pedagogy:
+  activity: worked-example
+  difficulty: novice
+  prereq_topics:
+    - arrays
+    - loops
+    - classes
+    - constructors
+  topics:
+    - arrays-of-objects
+    - aliasing
+    - object-references
+    - object-state
+runtime:
+  language: java
+  version: 17
+statement: |
+  A game uses tokens to keep score. At first, three players share the same token.
+  Add points to that token, then give the third player a separate token.
+  Follow which scores change and which players still share a token.
+executions:
+  - title: Shared token, then a separate token
+    stdin: []
+    stdout: |-
+      Player 1: 7
+      Shared: 7
+      Player 2: 21
+      Players 0 and 1 share: true
+      Players 0 and 2 share: false
+    console: |-
+      Player 1: 7
+      Shared: 7
+      Player 2: 21
+      Players 0 and 1 share: true
+      Players 0 and 2 share: false
+    status: pass
+    feedback:
+      on_pass:
+        - "Assigning a reference does not copy the Token. Players sharing it see the same score."
+elements:
+  - type: explanation
+    location:
+      snippet: players[i] = shared;
+    explanations:
+      - body: |
+          ### 1. Share one token
+          Call the first token T. Its score is 5. The array is `[T, T, T]`.
+          `shared` also refers to T. Assignment copies the reference, not T.
+  - type: explanation
+    location:
+      snippet: players[0].score += 2;
+    explanations:
+      - body: |
+          ### 2. Change the shared score
+          T's score becomes 7. All three players see 7.
+          The next line prints `Player 1: 7`.
+  - type: explanation
+    location:
+      snippet: players[2] = new Token(20);
+    explanations:
+      - body: |
+          ### 3. Give player 2 a new token
+          Call the new token U. Its score starts at 20.
+          The array becomes `[T, T, U]`.
+          Increasing U's score gives 21. T's score stays 7.
+  - type: explanation
+    location:
+      snippet: 'System.out.println("Players 0 and 1 share: " + (players[0] == players[1]));'
+    explanations:
+      - body: |
+          ### 4. Compare the players
+          | Stage | players references | T.score | U.score |
+          |-------|--------------------|---------|---------|
+          | After filling | [T, T, T] | 5 | not created |
+          | After player 0 update | [T, T, T] | 7 | not created |
+          | After replacing index 2 | [T, T, U] | 7 | 20 |
+          | After player 2 update | [T, T, U] | 7 | 21 |
+
+          Players 0 and 1 share T, so `==` is true.
+          Players 0 and 2 have different tokens, so `==` is false.
+          To create separate tokens from the start, use `new Token(5)`
+          inside the loop.

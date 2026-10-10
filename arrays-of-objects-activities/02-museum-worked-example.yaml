@@ -1,0 +1,91 @@
+$schema: https://adapt2.sis.pitt.edu/cupcake/schemas/worked-example/0.1.0
+source: MuseumLabels.java
+license: MIT
+locale: en-US
+id: we_array_objects_museum
+title: "Museum Labels: Check for Null"
+description: Check for null before calling String methods.
+authors: []
+pedagogy:
+  activity: worked-example
+  difficulty: novice
+  prereq_topics:
+    - arrays
+    - loops
+    - conditional-logic
+    - methods
+  topics:
+    - arrays-of-objects
+    - "null"
+    - null-pointer-exception
+    - null-guards
+runtime:
+  language: java
+  version: 17
+statement: |
+  A museum has four displays, but only two have labels.
+  Print each label in uppercase and count the letters in all the labels.
+  Follow how the program checks for null so it can skip displays without labels.
+executions:
+  - title: Count letters in existing labels
+    stdin: []
+    stdout: |-
+      0: VASE
+      1: no label
+      2: MAP
+      3: no label
+      Letters: 7
+    console: |-
+      0: VASE
+      1: no label
+      2: MAP
+      3: no label
+      Letters: 7
+    status: pass
+    feedback:
+      on_pass:
+        - "The loop calls methods only on non-null labels."
+elements:
+  - type: explanation
+    location:
+      context: String[] labels = new String[4];
+      snippet: new String[4]
+    explanations:
+      - body: |
+          ### 1. Set up the labels
+          The array is `["Vase", null, "Map", null]`.
+          Elements 1 and 3 remain null.
+  - type: explanation
+    location:
+      context: if (labels[i] != null) {
+      snippet: labels[i] != null
+    explanations:
+      - body: |
+          ### 2. Follow the loop
+          | i | labels[i] | Is there a label? | Running total | Output |
+          |---|-----------|-----------|------------------------------|--------------|
+          | 0 | "Vase" | true | 4 | 0: VASE |
+          | 1 | null | false | 4 | 1: no label |
+          | 2 | "Map" | true | 7 | 2: MAP |
+          | 3 | null | false | 7 | 3: no label |
+
+          Null elements use the `else` branch.
+          `toUpperCase()` returns uppercase text; it does not change the array.
+  - type: explanation
+    location:
+      snippet: totalLetters += labels[i].length();
+    explanations:
+      - body: |
+          ### 3. Why check for null?
+          Without the check, the loop prints `0: VASE`, then
+          `labels[1].length()` throws NullPointerException.
+          Null has no methods. The remaining output never prints.
+          Printing `labels[1]` itself is legal.
+  - type: explanation
+    location:
+      snippet: 'System.out.println("Letters: " + totalLetters);'
+    explanations:
+      - body: |
+          ### 4. Print the total
+          The two labels have 4 + 3 = 7 letters.
+          The final line is `Letters: 7`.

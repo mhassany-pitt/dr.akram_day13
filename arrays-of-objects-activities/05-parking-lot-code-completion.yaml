@@ -1,0 +1,116 @@
+$schema: https://adapt2.sis.pitt.edu/cupcake/schemas/code-completion/0.1.0
+source: ParkingLot.java
+license: MIT
+locale: en-US
+id: cc_aoo_parking_lot_two_phase
+title: Complete the Two-Phase Initialization of a Parking Lot
+description: Fill in the array creation, the loop bound, and the per-slot object creation so every parking spot holds a real Car.
+authors:
+- first: Aum
+  last: Pandya
+  email: apandya4@ncsu.edu
+  affiliation: North Carolina State University
+pedagogy:
+  activity: code-completion
+  difficulty: novice
+  prereq_topics:
+  - arrays
+  - classes
+  - constructors
+  topics:
+  - arrays-of-objects
+  - two-phase-initialization
+runtime:
+  language: java
+  version: 17
+statement: |
+  Complete the program so that it creates **3 parking spots** and parks a different `Car` in each one.
+  The final loop dereferences every element (`c.plate`), so **no slot may be left `null`**.
+hints:
+- Phase 1 creates the array, and you specify its size in square brackets.
+- Phase 2 must run `new` once for every slot. Which loop bound visits every index exactly once?
+testcases:
+- title: Three parked cars
+  visible: true
+  stdin: []
+  stdout: |-
+    Parked: NC-100
+    Parked: NC-101
+    Parked: NC-102
+  console: |-
+    Parked: NC-100
+    Parked: NC-101
+    Parked: NC-102
+  status: pass
+  feedback:
+    on_pass:
+    - All three spots hold their own Car object, so the enhanced for loop can safely read c.plate.
+    on_fail:
+    - At least one spot is still null or the program did not compile. Check the array size, the loop bound, and that each slot gets a new Car.
+elements:
+- type: blank
+  location:
+    context: Car[] spots = new Car[3];
+    snippet: Car[3]
+    nth: 1
+  choices:
+  - snippet: Car[3]
+    role: solution
+    explanations:
+    - body: 'Correct! `new Car[3]` is phase 1: it creates an array of three `Car` references, all initially `null`.'
+  - snippet: Car(3)
+    role: distractor
+    explanations:
+    - body: Incorrect. `new Car(3)` tries to call a `Car` constructor that takes an `int`. It does not create an array, so this does not compile.
+  - snippet: Car[]
+    role: distractor
+    explanations:
+    - body: Incorrect. When you create an array with `new`, you must give its length, so `new Car[]` does not compile.
+  - snippet: Car[2]
+    role: distractor
+    explanations:
+    - body: Incorrect. This compiles, but it creates only two spots, so the output is missing the third car.
+- type: blank
+  location:
+    context: for (int i = 0; i < spots.length; i++) {
+    snippet: spots.length
+    nth: 1
+  choices:
+  - snippet: spots.length
+    role: solution
+    explanations:
+    - body: Correct! `length` is a **field** of every array, so `i < spots.length` visits indexes 0, 1, and 2.
+  - snippet: spots.length()
+    role: distractor
+    explanations:
+    - body: Incorrect. Arrays have a `length` **field**, not a `length()` method (that belongs to `String`). This does not compile.
+  - snippet: spots.size()
+    role: distractor
+    explanations:
+    - body: Incorrect. `size()` is an `ArrayList` method. Arrays do not have it, so this does not compile.
+  - snippet: spots.length - 1
+    role: distractor
+    explanations:
+    - body: Incorrect. This skips the last index, leaving `spots[2]` as `null`. The enhanced for loop then evaluates `c.plate` on `null` and throws a `NullPointerException`.
+- type: blank
+  location:
+    context: spots[i] = new Car("NC-" + (100 + i));
+    snippet: new Car("NC-" + (100 + i))
+    nth: 1
+  choices:
+  - snippet: new Car("NC-" + (100 + i))
+    role: solution
+    explanations:
+    - body: 'Correct! This is phase 2: a **new** `Car` object is created for each slot, each with its own plate.'
+  - snippet: spots[i]
+    role: distractor
+    explanations:
+    - body: Incorrect. `spots[i] = spots[i];` assigns each slot to itself, so it stays `null`, and the print loop throws a `NullPointerException`.
+  - snippet: 'null'
+    role: distractor
+    explanations:
+    - body: Incorrect. Storing `null` is legal, but dereferencing it later with `c.plate` throws a `NullPointerException`.
+  - snippet: new Car[i]
+    role: distractor
+    explanations:
+    - body: Incorrect. `new Car[i]` creates an **array**, not a `Car`. You cannot store a `Car[]` in a `Car` slot, so this does not compile.

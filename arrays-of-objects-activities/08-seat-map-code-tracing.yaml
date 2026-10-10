@@ -1,0 +1,70 @@
+$schema: https://adapt2.sis.pitt.edu/cupcake/schemas/parameterized-code-tracing/0.1.0
+source: SeatMap.java
+license: MIT
+locale: en-US
+id: pct_aoo_seat_map_nulls
+title: Trace a Partly Booked Seat Map
+description: Trace how many slots of a Guest[] remain null as the array size and the number of bookings vary.
+authors:
+- first: Aum
+  last: Pandya
+  email: apandya4@ncsu.edu
+  affiliation: North Carolina State University
+pedagogy:
+  activity: parameterized-code-tracing
+  difficulty: novice
+  prereq_topics:
+  - arrays
+  - classes
+  - constructors
+  topics:
+  - arrays-of-objects
+  - null-references
+  - default-values
+  - state-tracing
+runtime:
+  language: java
+  version: 17
+statement: |
+  Trace the program and give its exact output.
+  Pay attention to:
+  * Which slots get a `Guest` object and which stay `null`.
+  * What gets printed when an element that is `null` is concatenated into a String.
+hints:
+- Only indexes `0` to `booked - 1` are filled. Every other slot keeps its default value.
+- Empty seats = array length minus the number of booked seats.
+testcases:
+- title: Seat map trace
+  visible: true
+  stdin: []
+  stdout: |-
+    First seat: G0
+    Last seat: null
+    Empty seats: 2
+  console: |-
+    First seat: G0
+    Last seat: null
+    Empty seats: 2
+  status: pass
+  feedback:
+    on_pass:
+    - Correct! The unbooked slots stay null, and printing a null element shows the word null.
+    on_fail:
+    - Recount which indexes the first loop fills, and remember that printing null does not crash.
+elements:
+- type: parameter
+  location:
+    context: Guest[] seats = new Guest[5];
+    snippet: '5'
+  values:
+  - 4
+  - 5
+  - 6
+- type: parameter
+  location:
+    context: int booked = 3;
+    snippet: '3'
+  values:
+  - 1
+  - 2
+  - 3

@@ -1,0 +1,106 @@
+$schema: https://adapt2.sis.pitt.edu/cupcake/schemas/code-completion/0.1.0
+source: CargoHold.java
+license: MIT
+locale: en-US
+id: cc_aoo_cargo_hold_null_guard
+title: Build a Null-Safe Guard for a Cargo Hold
+description: Complete a short-circuit condition that skips empty array slots before reading a field of each Crate.
+authors:
+- first: Aum
+  last: Pandya
+  email: apandya4@ncsu.edu
+  affiliation: North Carolina State University
+pedagogy:
+  activity: code-completion
+  difficulty: intermediate
+  prereq_topics:
+  - arrays
+  - classes
+  - constructors
+  topics:
+  - arrays-of-objects
+  - null-checks
+  - null-pointer-exception
+  - short-circuit-evaluation
+runtime:
+  language: java
+  version: 17
+statement: |
+  The `hold` array has 5 slots, but only 3 contain a `Crate`.
+  Complete the `if` condition so the loop reports every crate heavier than 20 **without ever throwing a `NullPointerException`**.
+hints:
+- Which slots of `hold` were never assigned? What value do they hold?
+- Java evaluates `A && B` left to right and skips `B` when `A` is false. Use that to protect `hold[i].weight`.
+testcases:
+- title: Heavy crate report
+  visible: true
+  stdin: []
+  stdout: |-
+    Heavy: rice
+    Heavy: salt
+    Heavy crates: 2
+  console: |-
+    Heavy: rice
+    Heavy: salt
+    Heavy crates: 2
+  status: pass
+  feedback:
+    on_pass:
+    - The null check runs first and && short-circuits, so hold[i].weight is only read for real crates.
+    on_fail:
+    - The guard either crashed on an empty slot or counted the wrong crates. Make sure the null test comes first and that both conditions must be true.
+elements:
+- type: blank
+  location:
+    context: if (hold[i] != null && hold[i].weight > 20) {
+    snippet: '!='
+    nth: 1
+  choices:
+  - snippet: '!='
+    role: solution
+    explanations:
+    - body: Correct! `hold[i] != null` is `true` only when the slot refers to a real `Crate`.
+  - snippet: ==
+    role: distractor
+    explanations:
+    - body: Incorrect. With `==`, the right-hand side runs **only** for empty slots, so `hold[2].weight` throws a `NullPointerException`.
+  - snippet: '='
+    role: distractor
+    explanations:
+    - body: Incorrect. `=` is assignment, not comparison. `hold[i] = null` has type `Crate`, not `boolean`, so this does not compile.
+- type: blank
+  location:
+    context: if (hold[i] != null && hold[i].weight > 20) {
+    snippet: 'null'
+    nth: 1
+  choices:
+  - snippet: 'null'
+    role: solution
+    explanations:
+    - body: Correct! Empty slots of an object array hold the special reference `null`.
+  - snippet: '0'
+    role: distractor
+    explanations:
+    - body: Incorrect. `0` is the default for `int[]`, not for object arrays. Comparing a `Crate` with an `int` does not compile.
+  - snippet: '"null"'
+    role: distractor
+    explanations:
+    - body: Incorrect. `"null"` is a four-character `String` object, not the null reference. `Crate` and `String` cannot be compared, so this does not compile.
+- type: blank
+  location:
+    context: if (hold[i] != null && hold[i].weight > 20) {
+    snippet: '&&'
+    nth: 1
+  choices:
+  - snippet: '&&'
+    role: solution
+    explanations:
+    - body: 'Correct! `&&` short-circuits: when the slot is `null`, Java never evaluates `hold[i].weight`.'
+  - snippet: '||'
+    role: distractor
+    explanations:
+    - body: Incorrect. With `||`, a non-null slot makes the whole test true (so `tea` is counted as heavy), and a `null` slot forces `hold[i].weight` to run, which throws a `NullPointerException`.
+  - snippet: '&'
+    role: distractor
+    explanations:
+    - body: Incorrect. `&` is the non-short-circuit AND. It evaluates **both** sides, so `hold[2].weight` still runs on `null` and throws.

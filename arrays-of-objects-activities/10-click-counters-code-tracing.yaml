@@ -1,0 +1,76 @@
+$schema: https://adapt2.sis.pitt.edu/cupcake/schemas/parameterized-code-tracing/0.1.0
+source: ClickCounters.java
+license: MIT
+locale: en-US
+id: pct_aoo_click_counters_alias
+title: Trace Shared vs. Separate Counter Objects
+description: Trace counter values when two array slots alias the same object and a third slot holds its own object.
+authors:
+- first: Aum
+  last: Pandya
+  email: apandya4@ncsu.edu
+  affiliation: North Carolina State University
+pedagogy:
+  activity: parameterized-code-tracing
+  difficulty: intermediate
+  prereq_topics:
+  - arrays
+  - classes
+  - constructors
+  topics:
+  - arrays-of-objects
+  - references
+  - aliasing
+  - state-tracing
+runtime:
+  language: java
+  version: 17
+statement: |
+  Trace the program and give its exact output.
+  Note that `counters[0]` and `counters[2]` are assigned the **same** reference, while `counters[1]` gets its **own** object.
+hints:
+- Draw the array with arrows. How many Counter objects exist in total?
+- A click through `counters[0]` changes the object that `counters[2]` also refers to.
+testcases:
+- title: Alias trace
+  visible: true
+  stdin: []
+  stdout: |-
+    counters[0]: 12
+    counters[1]: 5
+    counters[2]: 12
+  console: |-
+    counters[0]: 12
+    counters[1]: 5
+    counters[2]: 12
+  status: pass
+  feedback:
+    on_pass:
+    - Correct! counters[0] and counters[2] always print the same value because they refer to one shared object.
+    on_fail:
+    - Re-check which slots refer to the shared object. Clicking through one alias changes what the other alias sees.
+elements:
+- type: parameter
+  location:
+    context: Counter shared = new Counter(10);
+    snippet: '10'
+  values:
+  - 0
+  - 7
+  - 10
+- type: parameter
+  location:
+    context: counters[1] = new Counter(4);
+    snippet: '4'
+  values:
+  - 1
+  - 4
+  - 9
+- type: parameter
+  location:
+    context: for (int i = 0; i < 2; i++) {
+    snippet: '2'
+  values:
+  - 1
+  - 2
+  - 3

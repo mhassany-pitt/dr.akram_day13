@@ -1,0 +1,81 @@
+$schema: https://adapt2.sis.pitt.edu/cupcake/schemas/worked-example/0.1.0
+source: PlaylistSetup.java
+license: MIT
+locale: en-US
+id: we_array_objects_playlist
+title: "Music Playlist: Null Array Elements"
+description: See why creating a Track array does not create any Track objects.
+authors: []
+pedagogy:
+  activity: worked-example
+  difficulty: novice
+  prereq_topics:
+    - arrays
+    - classes
+    - constructors
+  topics:
+    - arrays-of-objects
+    - "null"
+    - object-references
+runtime:
+  language: java
+  version: 17
+statement: |
+  Create a playlist that can hold three songs, add a song, then remove it.
+  See which elements are null and when a Track object is created.
+executions:
+  - title: Add and remove a music track
+    stdin: []
+    stdout: |-
+      Length: 3
+      Element 0: null
+      Element 1: Morning Song
+      Element 2 is null: true
+      Element 1 is null: true
+    console: |-
+      Length: 3
+      Element 0: null
+      Element 1: Morning Song
+      Element 2 is null: true
+      Element 1 is null: true
+    status: pass
+    feedback:
+      on_pass:
+        - "Creating the array does not create tracks. new Track(...) creates a track."
+elements:
+  - type: explanation
+    location:
+      snippet: Track[] playlist = new Track[3];
+    explanations:
+      - body: |
+          ### 1. Create the array
+          `new Track[3]` creates three elements, all null. It creates no Track
+          objects. By comparison, `new int[3]` starts with three zeros.
+  - type: explanation
+    location:
+      snippet: 'System.out.println("Element 0: " + playlist[0]);'
+    explanations:
+      - body: |
+          ### 2. Print null
+          Printing `playlist[0]` is legal and prints `null`.
+          Reading `playlist[0].title` would throw NullPointerException
+          because element 0 has no Track object.
+  - type: explanation
+    location:
+      snippet: playlist[1] = new Track("Morning Song");
+    explanations:
+      - body: |
+          ### 3. Add a track
+          `new Track(...)` creates a track, labeled T below. A reference
+          tells Java which object to use. Element 1 refers to T,
+          so the array is `[null, T, null]`.
+          Reading its title prints `Morning Song`. Element 2 is still null.
+  - type: explanation
+    location:
+      snippet: playlist[1] = null;
+    explanations:
+      - body: |
+          ### 4. Remove the reference
+          Setting element 1 to null gives `[null, null, null]`.
+          The array still has length 3. The track's title is unchanged.
+          `playlist[1] == null` is now true.

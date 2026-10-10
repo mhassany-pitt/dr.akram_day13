@@ -1,0 +1,89 @@
+$schema: https://adapt2.sis.pitt.edu/cupcake/schemas/worked-example/0.1.0
+source: WeatherStations.java
+license: MIT
+locale: en-US
+id: we_array_objects_weather
+title: "Weather Stations: Two-Phase Initialization"
+description: Create the array, then a separate Station object for each element.
+authors: []
+pedagogy:
+  activity: worked-example
+  difficulty: novice
+  prereq_topics:
+    - arrays
+    - loops
+    - classes
+    - constructors
+  topics:
+    - arrays-of-objects
+    - two-phase-initialization
+    - object-state
+    - object-references
+runtime:
+  language: java
+  version: 17
+statement: |
+  Set up three weather stations, each with its own temperature reading.
+  Create an array that can hold three stations, then create each Station object.
+  Change the first station's temperature and see why the other two stay the same.
+executions:
+  - title: Initialize independent stations
+    stdin: []
+    stdout: |-
+      Before setup: true
+      Station 0: 15
+      Station 1: 11
+      Station 2: 12
+      Same station: false
+    console: |-
+      Before setup: true
+      Station 0: 15
+      Station 1: 11
+      Station 2: 12
+      Same station: false
+    status: pass
+    feedback:
+      on_pass:
+        - "new Station(...) runs three times, creating three separate objects."
+elements:
+  - type: explanation
+    location:
+      snippet: Station[] stations = new Station[3];
+    explanations:
+      - body: |
+          ### 1. Create the array
+          All three elements start as null.
+          `stations[0] == null` is true. No Station objects exist yet.
+  - type: explanation
+    location:
+      snippet: stations[i] = new Station(10 + i);
+    explanations:
+      - body: |
+          ### 2. Create the objects
+          Each time through the loop creates a separate Station.
+          We label them S0, S1, and S2 below.
+          | i | New object | Temperature | Array references after assignment |
+          |---|------------|-------------|-----------------------------------|
+          | 0 | S0 | 10 | [S0, null, null] |
+          | 1 | S1 | 11 | [S0, S1, null] |
+          | 2 | S2 | 12 | [S0, S1, S2] |
+
+          After the loop, every element refers to a Station.
+          Their temperature fields can now be read safely.
+  - type: explanation
+    location:
+      snippet: stations[0].temperature += 5;
+    explanations:
+      - body: |
+          ### 3. Update station 0
+          S0's temperature changes from 10 to 15.
+          S1 stays 11 and S2 stays 12 because they are separate objects.
+  - type: explanation
+    location:
+      snippet: 'System.out.println("Same station: " + (stations[0] == stations[1]));'
+    explanations:
+      - body: |
+          ### 4. Compare references
+          `==` checks whether both references point to the same object.
+          S0 and S1 are separate, so the result is false,
+          even if their temperatures match.
