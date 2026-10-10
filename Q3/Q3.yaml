@@ -1,0 +1,193 @@
+$schema: https://adapt2.sis.pitt.edu/cupcake/schemas/free-coding/0.1.0
+source: Main.java
+license: MIT
+locale: en-US
+id: find_book_by_title_free_coding
+title: Find a Book by Title
+description: Search an array of Book objects and return null when no book matches.
+authors:
+  - first: Bita
+    last: Akram
+    email: bita.akram@gmail.com
+    affiliation: NC State University
+pedagogy:
+  activity: free-coding
+  difficulty: novice
+  prereq_topics:
+    - arrays
+    - classes
+    - for-loops
+    - string-equals
+  topics:
+    - arrays-of-objects
+    - two-phase-initialization
+    - returning-null
+    - null-pointer-exception
+runtime:
+  language: java
+  version: 17
+statement: |
+  The `Book` class is provided. It has two fields, `title` (a `String`) and `pages` (an `int`), and a constructor `Book(String title, int pages)`.
+
+  Write a method `public static Book findBook(Book[] shelf, String target)` that returns the first book whose `title` equals `target`. If no book matches, return `null`.
+
+  Then write `main`. It reads `n`, then `n` books as `title pages` pairs, then `target`. Titles are single words. It calls `findBook` and prints `Pages: ` followed by the found book's `pages`, or `Not found` if there is no match.
+
+  **Example 1**
+
+  Input:
+  ```
+  3
+  Dune 412
+  Emma 474
+  Dune 896
+  Dune
+  ```
+  Output:
+  ```
+  Pages: 412
+  ```
+
+  **Example 2**
+
+  Input:
+  ```
+  2
+  Dune 412
+  Emma 474
+  Ulysses
+  ```
+  Output:
+  ```
+  Not found
+  ```
+hints:
+  - "Build the shelf in two phases: `new Book[n]` creates the array, then store a `new Book(...)` in each element."
+  - "Compare titles with `.equals`, not `==`. The `==` operator checks whether two references point to the same object, not whether two strings have the same text."
+  - "Return as soon as you find a match. Return `null` only after the loop has checked every book."
+  - "`findBook` may return `null`. Check `found != null` before using `found.pages`."
+elements:
+  - type: locked
+    location:
+      snippet: |-
+        import java.util.Scanner;
+
+        class Book {
+            String title;
+            int pages;
+
+            Book(String title, int pages) {
+                this.title = title;
+                this.pages = pages;
+            }
+        }
+
+        public class Main {
+  - type: editable
+    location:
+      snippet: |2-
+            public static Book findBook(Book[] shelf, String target) {
+                for (int i = 0; i < shelf.length; i++) {
+                    if (shelf[i].title.equals(target)) {
+                        return shelf[i];
+                    }
+                }
+                return null;
+            }
+
+            public static void main(String[] args) {
+                Scanner in = new Scanner(System.in);
+                int n = in.nextInt();
+                Book[] shelf = new Book[n];
+                for (int i = 0; i < n; i++) {
+                    shelf[i] = new Book(in.next(), in.nextInt());
+                }
+                String target = in.next();
+                Book found = findBook(shelf, target);
+                if (found != null) {
+                    System.out.println("Pages: " + found.pages);
+                } else {
+                    System.out.println("Not found");
+                }
+            }
+    placeholder: |2-
+          // Write findBook and main here.
+  - type: locked
+    location:
+      snippet: |-
+        }
+testcases:
+  - title: Match in the Middle
+    visible: true
+    stdin:
+      - "3"
+      - "Dune 412"
+      - "Emma 474"
+      - "Hamlet 160"
+      - "Emma"
+    stdout: |-
+      Pages: 474
+    console: |-
+      Pages: 474
+    status: pass
+    feedback:
+      on_pass:
+        - "You found the matching book and returned its reference."
+      on_fail:
+        - "If you printed `Not found`, check how you compare titles. Use `.equals`, because `==` compares references, not text."
+        - "If every element was null, you created the array but never stored a `new Book(...)` in it."
+  - title: No Match
+    visible: true
+    stdin:
+      - "2"
+      - "Dune 412"
+      - "Emma 474"
+      - "Ulysses"
+    stdout: |-
+      Not found
+    console: |-
+      Not found
+    status: pass
+    feedback:
+      on_pass:
+        - "Your method returned null, and main checked for it before using the result."
+      on_fail:
+        - "If you got a NullPointerException, main used `found.pages` while `found` was null. Check `found != null` first."
+        - "Make sure `findBook` returns `null` after the loop when no title matches."
+  - title: Match at the Last Index (hidden)
+    visible: false
+    stdin:
+      - "3"
+      - "Dune 412"
+      - "Emma 474"
+      - "Hamlet 160"
+      - "Hamlet"
+    stdout: |-
+      Pages: 160
+    console: |-
+      Pages: 160
+    status: pass
+    feedback:
+      on_pass:
+        - "Your loop checks every book, including the last one."
+      on_fail:
+        - "Check your loop bounds. The loop must reach index `shelf.length - 1`."
+        - "Don't return `null` inside the loop. A non-matching book doesn't mean the search is over."
+  - title: Duplicate Titles (hidden)
+    visible: false
+    stdin:
+      - "3"
+      - "Dune 412"
+      - "Emma 474"
+      - "Dune 896"
+      - "Dune"
+    stdout: |-
+      Pages: 412
+    console: |-
+      Pages: 412
+    status: pass
+    feedback:
+      on_pass:
+        - "You returned the first match, not the last."
+      on_fail:
+        - "When two books share a title, return the first one. Return as soon as you find a match instead of continuing the loop."

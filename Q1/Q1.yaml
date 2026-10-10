@@ -1,0 +1,206 @@
+$schema: https://adapt2.sis.pitt.edu/cupcake/schemas/free-coding/0.1.0
+source: Main.java
+license: MIT
+locale: en-US
+id: shift_all_points_free_coding
+title: Build and Shift an Array of Points
+description: Build an array of Point objects that may contain nulls, then write a method that shifts every point.
+authors:
+  - first: Bita
+    last: Akram
+    email: bita.akram@gmail.com
+    affiliation: NC State University
+pedagogy:
+  activity: free-coding
+  difficulty: novice
+  prereq_topics:
+    - arrays
+    - classes
+    - for-loops
+    - scanner-input
+  topics:
+    - arrays-of-objects
+    - two-phase-initialization
+    - null
+    - null-pointer-exception
+    - static-methods
+runtime:
+  language: java
+  version: 17
+statement: |
+  The `Point` class is provided. It has two fields, `x` and `y`, a constructor `Point(int x, int y)`, and a `toString` method that returns text like `(3, 4)`.
+
+  Write a method `public static void shiftAll(Point[] pts, int dx, int dy)` that moves every point in `pts` by `dx` horizontally and `dy` vertically. Elements that are `null` stay `null`.
+
+  In `main`, read a `Point` array from input, shift it with `shiftAll`, and print every element on its own line.
+
+  The input starts with the array length `n`. Then come `n` elements, each either the word `null` or two integers `x y`. The last two integers are `dx` and `dy`.
+
+  **Example**
+
+  Input:
+  ```
+  3
+  1 2
+  null
+  3 4
+  10 -1
+  ```
+  Output:
+  ```
+  (11, 1)
+  null
+  (13, 3)
+  ```
+hints:
+  - "Read each element with `in.next()`, which returns a `String`. If it equals `\"null\"`, leave that element alone. Otherwise, convert it with `Integer.parseInt` to get `x`, then read `y` with `in.nextInt()`."
+  - "Building the array takes two phases. `new Point[n]` creates the array, but every element starts as `null`. You still need to store a `new Point(x, y)` in each non-null element."
+  - "In `shiftAll`, check `pts[i] != null` before using `pts[i].x`. Using `.` on a null element throws a `NullPointerException`."
+  - "Printing a null element is legal. `System.out.println` prints the word `null`."
+elements:
+  - type: locked
+    location:
+      snippet: |-
+        import java.util.Scanner;
+
+        class Point {
+            int x;
+            int y;
+
+            Point(int x, int y) {
+                this.x = x;
+                this.y = y;
+            }
+
+            public String toString() {
+                return "(" + x + ", " + y + ")";
+            }
+        }
+
+        public class Main {
+  - type: editable
+    location:
+      snippet: |2-
+            public static void shiftAll(Point[] pts, int dx, int dy) {
+                for (int i = 0; i < pts.length; i++) {
+                    if (pts[i] != null) {
+                        pts[i].x += dx;
+                        pts[i].y += dy;
+                    }
+                }
+            }
+
+            public static void main(String[] args) {
+                Scanner in = new Scanner(System.in);
+                int n = in.nextInt();
+                Point[] pts = new Point[n];
+                for (int i = 0; i < n; i++) {
+                    String tok = in.next();
+                    if (!tok.equals("null")) {
+                        pts[i] = new Point(Integer.parseInt(tok), in.nextInt());
+                    }
+                }
+                int dx = in.nextInt();
+                int dy = in.nextInt();
+                shiftAll(pts, dx, dy);
+                for (Point p : pts) {
+                    System.out.println(p);
+                }
+            }
+    placeholder: |2-
+          // Write shiftAll and main here.
+  - type: locked
+    location:
+      snippet: |-
+        }
+testcases:
+  - title: No Null Elements
+    visible: true
+    stdin:
+      - "3"
+      - "1 2"
+      - "3 4"
+      - "5 6"
+      - "10 -1"
+    stdout: |-
+      (11, 1)
+      (13, 3)
+      (15, 5)
+    console: |-
+      (11, 1)
+      (13, 3)
+      (15, 5)
+    status: pass
+    feedback:
+      on_pass:
+        - "You built the array with two-phase initialization and shifted every point through its reference."
+      on_fail:
+        - "Check that you store a `new Point(x, y)` in each element, and that `shiftAll` adds `dx` to `x` and `dy` to `y`."
+        - "If every line printed `null`, you created the array but never filled it. `new Point[n]` only completes phase 1."
+  - title: Some Null Elements
+    visible: true
+    stdin:
+      - "4"
+      - "null"
+      - "0 0"
+      - "null"
+      - "-2 7"
+      - "1 1"
+    stdout: |-
+      null
+      (1, 1)
+      null
+      (-1, 8)
+    console: |-
+      null
+      (1, 1)
+      null
+      (-1, 8)
+    status: pass
+    feedback:
+      on_pass:
+        - "You left the null elements empty and skipped them when shifting. Looking before you leap prevents a NullPointerException."
+      on_fail:
+        - "If you got a NullPointerException, your code used `.` on a null element. Check `pts[i] != null` before accessing `pts[i].x`."
+        - "If you got an InputMismatchException, you probably read `null` with `nextInt()`. Read each element with `next()` first."
+  - title: All Null Elements (hidden)
+    visible: false
+    stdin:
+      - "3"
+      - "null"
+      - "null"
+      - "null"
+      - "5 5"
+    stdout: |-
+      null
+      null
+      null
+    console: |-
+      null
+      null
+      null
+    status: pass
+    feedback:
+      on_pass:
+        - "Your program handles an array where every element is null."
+      on_fail:
+        - "When every element is null, there is nothing to shift. Your program should print `null` three times without crashing."
+  - title: Null First Element (hidden)
+    visible: false
+    stdin:
+      - "2"
+      - "null"
+      - "4 4"
+      - "-4 0"
+    stdout: |-
+      null
+      (0, 4)
+    console: |-
+      null
+      (0, 4)
+    status: pass
+    feedback:
+      on_pass:
+        - "A null at the start didn't stop your program from reaching the later points."
+      on_fail:
+        - "Make sure a null element doesn't end your loop early. Skip it and keep going to the next index."

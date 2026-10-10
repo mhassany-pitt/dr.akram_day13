@@ -1,0 +1,215 @@
+$schema: https://adapt2.sis.pitt.edu/cupcake/schemas/free-coding/0.1.0
+source: Main.java
+license: MIT
+locale: en-US
+id: sale_price_copy_free_coding
+title: Make a Sale Price List
+description: Copy an array of Product objects so that changing the copy leaves the original unchanged.
+authors:
+  - first: Bita
+    last: Akram
+    email: bita.akram@gmail.com
+    affiliation: NC State University
+pedagogy:
+  activity: free-coding
+  difficulty: novice
+  prereq_topics:
+    - arrays
+    - classes
+    - for-loops
+  topics:
+    - arrays-of-objects
+    - two-phase-initialization
+    - object-references
+    - copying-arrays
+runtime:
+  language: java
+  version: 17
+statement: |
+  A store is running a sale: every product is $5 off. It needs a sale price list, but its regular prices must stay the same.
+
+  Write `public static Product[] copyProducts(Product[] products)`. It returns a copy of `products` that doesn't share any `Product` objects with the original.
+
+  In `main`, read the products, copy them, and take $5 off every price in the copy. Then print the regular prices and the sale prices as shown. The input starts with the number of products.
+
+  **Example**
+
+  Input:
+  ```
+  2
+  pen 8
+  mug 15
+  ```
+  Output:
+  ```
+  Regular prices:
+  pen $8
+  mug $15
+  Sale prices:
+  pen $3
+  mug $10
+  ```
+hints:
+  - "`System.out.println(p)` uses the `Product`'s `toString` method, so it prints text like `pen $8`."
+  - "`copy[i] = products[i]` copies a reference, not an object. Both arrays would then point to the same `Product`, so changing one changes the other."
+  - "Build the copy in two phases: create a new array of the same length, then store a `new Product(...)` with the same name and price in each element."
+elements:
+  - type: locked
+    location:
+      snippet: |-
+        import java.util.Scanner;
+
+        class Product {
+            String name;
+            int price;
+
+            Product(String name, int price) {
+                this.name = name;
+                this.price = price;
+            }
+
+            public String toString() {
+                return name + " $" + price;
+            }
+        }
+
+        public class Main {
+  - type: editable
+    location:
+      snippet: |2-
+            public static Product[] copyProducts(Product[] products) {
+                Product[] copy = new Product[products.length];
+                for (int i = 0; i < products.length; i++) {
+                    copy[i] = new Product(products[i].name, products[i].price);
+                }
+                return copy;
+            }
+
+            public static void main(String[] args) {
+                Scanner in = new Scanner(System.in);
+                int n = in.nextInt();
+                Product[] products = new Product[n];
+                for (int i = 0; i < n; i++) {
+                    products[i] = new Product(in.next(), in.nextInt());
+                }
+                Product[] sale = copyProducts(products);
+                for (int i = 0; i < sale.length; i++) {
+                    sale[i].price -= 5;
+                }
+                System.out.println("Regular prices:");
+                for (Product p : products) {
+                    System.out.println(p);
+                }
+                System.out.println("Sale prices:");
+                for (Product p : sale) {
+                    System.out.println(p);
+                }
+            }
+    placeholder: |2-
+          // Write copyProducts and main here.
+  - type: locked
+    location:
+      snippet: |-
+        }
+testcases:
+  - title: Two Products
+    visible: true
+    stdin:
+      - "2"
+      - "pen 8"
+      - "mug 15"
+    stdout: |-
+      Regular prices:
+      pen $8
+      mug $15
+      Sale prices:
+      pen $3
+      mug $10
+    console: |-
+      Regular prices:
+      pen $8
+      mug $15
+      Sale prices:
+      pen $3
+      mug $10
+    status: pass
+    feedback:
+      on_pass:
+        - "Your copy holds its own Product objects, so the sale didn't change the regular prices."
+      on_fail:
+        - "If the regular prices also dropped by $5, your copy shares objects with the original. Store a `new Product(...)` in each element of the copy."
+        - "If you wrote `Product[] sale = products;`, both variables refer to the same array. You need a new array and new objects."
+  - title: One Product
+    visible: true
+    stdin:
+      - "1"
+      - "lamp 40"
+    stdout: |-
+      Regular prices:
+      lamp $40
+      Sale prices:
+      lamp $35
+    console: |-
+      Regular prices:
+      lamp $40
+      Sale prices:
+      lamp $35
+    status: pass
+    feedback:
+      on_pass:
+        - "Your program works for a single product."
+      on_fail:
+        - "Check that both headings print exactly as shown, including the colon."
+        - "If the regular price shows $35, the original and the copy share the same Product object."
+  - title: Four Products (hidden)
+    visible: false
+    stdin:
+      - "4"
+      - "pen 8"
+      - "mug 15"
+      - "book 22"
+      - "hat 30"
+    stdout: |-
+      Regular prices:
+      pen $8
+      mug $15
+      book $22
+      hat $30
+      Sale prices:
+      pen $3
+      mug $10
+      book $17
+      hat $25
+    console: |-
+      Regular prices:
+      pen $8
+      mug $15
+      book $22
+      hat $30
+      Sale prices:
+      pen $3
+      mug $10
+      book $17
+      hat $25
+    status: pass
+    feedback:
+      on_pass:
+        - "Your copy works for a longer array."
+      on_fail:
+        - "Make sure your loops use the array's length, not a fixed number."
+  - title: Empty Shelf (hidden)
+    visible: false
+    stdin:
+      - "0"
+    stdout: |-
+      Regular prices:
+      Sale prices:
+    console: |-
+      Regular prices:
+      Sale prices:
+    status: pass
+    feedback:
+      on_pass:
+        - "Your program handles a store with no products and still prints both headings."
+      on_fail:
+        - "With 0 products, your program should still print both headings. Check that your loops use the array's length and that nothing crashes on an empty array."

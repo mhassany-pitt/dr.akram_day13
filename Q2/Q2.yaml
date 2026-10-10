@@ -1,0 +1,168 @@
+$schema: https://adapt2.sis.pitt.edu/cupcake/schemas/free-coding/0.1.0
+source: Main.java
+license: MIT
+locale: en-US
+id: make_points_two_phase_free_coding
+title: Build an Array of Points
+description: Use two-phase initialization to create an array of distinct Point objects.
+authors:
+  - first: Bita
+    last: Akram
+    email: bita.akram@gmail.com
+    affiliation: NC State University
+pedagogy:
+  activity: free-coding
+  difficulty: novice
+  prereq_topics:
+    - arrays
+    - classes
+    - for-loops
+  topics:
+    - arrays-of-objects
+    - two-phase-initialization
+    - object-references
+runtime:
+  language: java
+  version: 17
+statement: |
+  The `Point` class is provided. It has two fields, `x` and `y`, a constructor `Point(int x, int y)`, and a `toString` method that returns text like `(3, 4)`.
+
+  Write a method `public static Point[] makePoints(int n)` that returns an array of `n` points, where the point at index `i` is `(i, i)`.
+
+  Then write `main`. It reads `n` from input, gets an array from `makePoints`, and prints every element on its own line.
+
+  **Example**
+
+  Input:
+  ```
+  3
+  ```
+  Output:
+  ```
+  (0, 0)
+  (1, 1)
+  (2, 2)
+  ```
+hints:
+  - "`new Point[n]` creates the array, but every element starts as `null`. That's only phase 1."
+  - "Phase 2 stores an object in each element. Inside a loop, store a `new Point(i, i)` in `pts[i]`."
+  - "In `main`, `System.out.println(p)` uses the `Point`'s `toString` method, so it prints text like `(1, 1)`."
+  - "Call `new Point(...)` inside the loop. If you create one `Point` before the loop and store it in every element, all elements refer to the same object."
+elements:
+  - type: locked
+    location:
+      snippet: |-
+        import java.util.Scanner;
+
+        class Point {
+            int x;
+            int y;
+
+            Point(int x, int y) {
+                this.x = x;
+                this.y = y;
+            }
+
+            public String toString() {
+                return "(" + x + ", " + y + ")";
+            }
+        }
+
+        public class Main {
+  - type: editable
+    location:
+      snippet: |2-
+            public static Point[] makePoints(int n) {
+                Point[] pts = new Point[n];
+                for (int i = 0; i < n; i++) {
+                    pts[i] = new Point(i, i);
+                }
+                return pts;
+            }
+
+            public static void main(String[] args) {
+                Scanner in = new Scanner(System.in);
+                int n = in.nextInt();
+                Point[] pts = makePoints(n);
+                for (Point p : pts) {
+                    System.out.println(p);
+                }
+            }
+    placeholder: |2-
+          // Write makePoints and main here.
+  - type: locked
+    location:
+      snippet: |-
+        }
+testcases:
+  - title: Three Points
+    visible: true
+    stdin:
+      - "3"
+    stdout: |-
+      (0, 0)
+      (1, 1)
+      (2, 2)
+    console: |-
+      (0, 0)
+      (1, 1)
+      (2, 2)
+    status: pass
+    feedback:
+      on_pass:
+        - "You completed both phases: you created the array, then stored a new Point in every element."
+      on_fail:
+        - "If you got a NullPointerException, you created the array but never stored a Point in it. `new Point[n]` is only phase 1."
+        - "If every line shows the same point, all elements refer to one object. Create a `new Point` inside the loop."
+  - title: One Point
+    visible: true
+    stdin:
+      - "1"
+    stdout: |-
+      (0, 0)
+    console: |-
+      (0, 0)
+    status: pass
+    feedback:
+      on_pass:
+        - "Your method works for an array of length 1."
+      on_fail:
+        - "Check that your loop runs from `0` up to `n - 1` and stores a Point at every index."
+  - title: Five Points (hidden)
+    visible: false
+    stdin:
+      - "5"
+    stdout: |-
+      (0, 0)
+      (1, 1)
+      (2, 2)
+      (3, 3)
+      (4, 4)
+    console: |-
+      (0, 0)
+      (1, 1)
+      (2, 2)
+      (3, 3)
+      (4, 4)
+    status: pass
+    feedback:
+      on_pass:
+        - "Your method builds distinct points for a longer array."
+      on_fail:
+        - "Make sure the loop uses `n`, not a fixed number, and that each element gets its own `new Point(i, i)`."
+  - title: Two Points (hidden)
+    visible: false
+    stdin:
+      - "2"
+    stdout: |-
+      (0, 0)
+      (1, 1)
+    console: |-
+      (0, 0)
+      (1, 1)
+    status: pass
+    feedback:
+      on_pass:
+        - "Each element holds its own Point object."
+      on_fail:
+        - "If both lines show the same point, both elements refer to one object. Create a new Point for each index."
