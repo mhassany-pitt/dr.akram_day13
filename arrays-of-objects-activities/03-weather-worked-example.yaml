@@ -5,7 +5,11 @@ locale: en-US
 id: we_array_objects_weather
 title: "Weather Stations: Two-Phase Initialization"
 description: Create the array, then a separate Station object for each element.
-authors: []
+authors:
+- first: Aum
+  last: Pandya
+  email: apandya4@ncsu.edu
+  affiliation: North Carolina State University
 pedagogy:
   activity: worked-example
   difficulty: novice

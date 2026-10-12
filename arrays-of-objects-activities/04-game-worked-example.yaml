@@ -5,7 +5,11 @@ locale: en-US
 id: we_array_objects_game
 title: "Game Tokens: Sharing an Object"
 description: See how sharing a Token differs from creating a new one.
-authors: []
+authors:
+- first: Aum
+  last: Pandya
+  email: apandya4@ncsu.edu
+  affiliation: North Carolina State University
 pedagogy:
   activity: worked-example
   difficulty: novice

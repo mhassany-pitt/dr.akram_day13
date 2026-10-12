@@ -5,7 +5,11 @@ locale: en-US
 id: we_array_objects_playlist
 title: "Music Playlist: Null Array Elements"
 description: See why creating a Track array does not create any Track objects.
-authors: []
+authors:
+- first: Aum
+  last: Pandya
+  email: apandya4@ncsu.edu
+  affiliation: North Carolina State University
 pedagogy:
   activity: worked-example
   difficulty: novice

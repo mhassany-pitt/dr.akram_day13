@@ -5,7 +5,11 @@ locale: en-US
 id: we_array_objects_museum
 title: "Museum Labels: Check for Null"
 description: Check for null before calling String methods.
-authors: []
+authors:
+- first: Aum
+  last: Pandya
+  email: apandya4@ncsu.edu
+  affiliation: North Carolina State University
 pedagogy:
   activity: worked-example
   difficulty: novice
