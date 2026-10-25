@@ -1,0 +1,187 @@
+$schema: https://adapt2.sis.pitt.edu/cupcake/schemas/free-coding/0.1.0
+license: MIT
+locale: en-US
+id: step_counter_file_input
+title: Step Counter
+description: Read every integer from a file with a Scanner and report the count, total, and average.
+source: Main.java
+authors:
+  - first: Bita
+    last: Akram
+    email: bita.akram@gmail.com
+    affiliation: NC State University
+pedagogy:
+  activity: free-coding
+  difficulty: novice
+  prereq_topics:
+    - scanner-input
+    - while-loops
+    - printf
+  topics:
+    - file-input
+    - fileinputstream
+    - checked-exceptions
+    - throws-clause
+    - token-processing
+    - hasnext-methods
+runtime:
+  language: java
+  version: 17
+statement: |
+  The file `steps.txt` holds a person's daily step counts, separated by spaces and line breaks. The number of days is different in every file.
+
+  Write `main` so it reads every count from `steps.txt` and prints the number of days, the total steps, and the average per day with one decimal place.
+
+  **Example**
+
+  `steps.txt`:
+  ```
+  8000 9500
+  12000
+
+  7000
+  ```
+  Output:
+  ```
+  Days: 4
+  Total: 36500
+  Average: 9125.0
+  ```
+hints:
+  - Open the file with `new Scanner(new FileInputStream("steps.txt"))`.
+  - If you see `unreported exception FileNotFoundException`, add `throws FileNotFoundException` to the header of `main`.
+  - You don't know how many counts the file has. Loop with `while (input.hasNextInt())`.
+  - Line breaks don't matter. A Scanner reads tokens separated by any whitespace.
+  - '`total / days` is integer division. Cast one side to `double` before dividing, then print with `printf("Average: %.1f\n", ...)`.'
+testcases:
+  - title: Four Days
+    visible: true
+    stdin:
+      - 8000 9500
+      - '12000'
+      - ''
+      - '7000'
+    stdout: |-
+      Days: 4
+      Total: 36500
+      Average: 9125.0
+    console: |-
+      Days: 4
+      Total: 36500
+      Average: 9125.0
+    feedback:
+      on_pass:
+        - You read every token, even across blank lines and uneven spacing.
+      on_fail:
+        - |-
+          If your code didn't compile, check that `main` has `throws FileNotFoundException`.
+
+          If Days is too small, your loop may stop at a line break. Loop with `hasNextInt()`, which skips all whitespace.
+  - title: One Day
+    visible: true
+    stdin:
+      - '10000'
+    stdout: |-
+      Days: 1
+      Total: 10000
+      Average: 10000.0
+    console: |-
+      Days: 1
+      Total: 10000
+      Average: 10000.0
+    feedback:
+      on_pass:
+        - Your program works for a file with a single count.
+      on_fail:
+        - Check that each label matches exactly, including the colon and the space after it.
+  - title: Average With a Fraction (hidden)
+    visible: false
+    stdin:
+      - 5000 6000 7001
+    stdout: |-
+      Days: 3
+      Total: 18001
+      Average: 6000.3
+    console: |-
+      Days: 3
+      Total: 18001
+      Average: 6000.3
+    feedback:
+      on_pass:
+        - You avoided integer division, so the average kept its fraction.
+      on_fail:
+        - 'If your average ended in `.0`, you used integer division. Cast to `double` before dividing: `(double) total / days`.'
+  - title: Many Lines (hidden)
+    visible: false
+    stdin:
+      - '   3200'
+      - 4100   5000
+      - ''
+      - ''
+      - 6100 2500
+      - '  8800'
+    stdout: |-
+      Days: 6
+      Total: 29700
+      Average: 4950.0
+    console: |-
+      Days: 6
+      Total: 29700
+      Average: 4950.0
+    feedback:
+      on_pass:
+        - Leading spaces and extra blank lines didn't trip up your loop.
+      on_fail:
+        - Don't assume a fixed number of counts per line. Read one token at a time until `hasNextInt()` is false.
+elements:
+  - type: locked
+    location:
+      snippet: |-
+        import java.io.*;
+        import java.util.*;
+
+        public class Main {
+            // Test setup: creates steps.txt. Don't change.
+            static {
+                try {
+                    java.nio.file.Files.copy(System.in,
+                        java.nio.file.Paths.get("steps.txt"),
+                        java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+  - type: editable
+    location:
+      snippet: |2-
+            public static void main(String[] args) throws FileNotFoundException {
+                Scanner input = new Scanner(new FileInputStream("steps.txt"));
+                int days = 0;
+                int total = 0;
+                while (input.hasNextInt()) {
+                    total = total + input.nextInt();
+                    days++;
+                }
+                System.out.println("Days: " + days);
+                System.out.println("Total: " + total);
+                System.out.printf("Average: %.1f\n", (double) total / days);
+            }
+    placeholder: '    // Write main here.'
+  - type: locked
+    location:
+      snippet: '}'
+  - type: fold
+    location:
+      snippet: |2-
+            // Test setup: creates steps.txt. Don't change.
+            static {
+                try {
+                    java.nio.file.Files.copy(System.in,
+                        java.nio.file.Paths.get("steps.txt"),
+                        java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+    summary: "Test setup: creates steps.txt. Don't change."
+    collapsed: true
