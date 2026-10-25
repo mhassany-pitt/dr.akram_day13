@@ -1,0 +1,195 @@
+$schema: https://adapt2.sis.pitt.edu/cupcake/schemas/free-coding/0.1.0
+license: MIT
+locale: en-US
+id: sensor_readings_file_input
+title: Sensor Readings
+description: Read temperature readings from a file, skipping error tokens that are not numbers.
+source: Main.java
+authors:
+  - first: Bita
+    last: Akram
+    email: bita.akram@gmail.com
+    affiliation: NC State University
+pedagogy:
+  activity: free-coding
+  difficulty: novice
+  prereq_topics:
+    - scanner-input
+    - while-loops
+    - if-else
+    - printf
+  topics:
+    - file-input
+    - fileinputstream
+    - throws-clause
+    - token-processing
+    - hasnext-methods
+    - skipping-bad-tokens
+runtime:
+  language: java
+  version: 17
+statement: |
+  A temperature sensor saves its readings in `readings.txt`. When the sensor glitches, it writes an error token such as `ERR` or `--` instead of a number.
+
+  Write `main` so it reads `readings.txt` and prints how many readings are valid, how many are errors, and the highest valid reading with one decimal place. Every file has at least one valid reading.
+
+  **Example**
+
+  `readings.txt`:
+  ```
+  71.5 ERR 73.2
+  --
+  70.8 74.0 ERR
+  ```
+  Output:
+  ```
+  Valid readings: 4
+  Errors: 3
+  Highest: 74.0
+  ```
+hints:
+  - Loop with `while (input.hasNext())` so you reach every token, including the bad ones.
+  - Inside the loop, use `hasNextDouble()` to decide what the next token is. If it's a number, read it with `nextDouble()`.
+  - If the token isn't a number, you still have to read it with `next()`. Otherwise the cursor never moves and the loop never ends.
+  - Readings can be negative. Don't start the highest value at `0`.
+testcases:
+  - title: Mixed Readings and Errors
+    visible: true
+    stdin:
+      - 71.5 ERR 73.2
+      - --
+      - 70.8 74.0 ERR
+    stdout: |-
+      Valid readings: 4
+      Errors: 3
+      Highest: 74.0
+    console: |-
+      Valid readings: 4
+      Errors: 3
+      Highest: 74.0
+    feedback:
+      on_pass:
+        - You read every number and skipped every error token.
+      on_fail:
+        - |-
+          If your program never finished, a bad token was never consumed. Call `input.next()` when `hasNextDouble()` is false.
+
+          If you got an InputMismatchException, you called `nextDouble()` on a token like `ERR`. Check `hasNextDouble()` first.
+  - title: No Errors
+    visible: true
+    stdin:
+      - 68.0 69.5
+    stdout: |-
+      Valid readings: 2
+      Errors: 0
+      Highest: 69.5
+    console: |-
+      Valid readings: 2
+      Errors: 0
+      Highest: 69.5
+    feedback:
+      on_pass:
+        - Your program works when every token is a number.
+      on_fail:
+        - Check that each label matches exactly, and that `Highest` uses one decimal place.
+  - title: Below Zero (hidden)
+    visible: false
+    stdin:
+      - -5.5 ERR -2.0
+      - '-8.25'
+    stdout: |-
+      Valid readings: 3
+      Errors: 1
+      Highest: -2.0
+    console: |-
+      Valid readings: 3
+      Errors: 1
+      Highest: -2.0
+    feedback:
+      on_pass:
+        - You handled readings below zero correctly.
+      on_fail:
+        - If Highest printed `0.0`, you started the highest value at 0. Start it at the first valid reading instead.
+  - title: Tricky Tokens (hidden)
+    visible: false
+    stdin:
+      - offline 55
+      - 60.5 7x
+    stdout: |-
+      Valid readings: 2
+      Errors: 2
+      Highest: 60.5
+    console: |-
+      Valid readings: 2
+      Errors: 2
+      Highest: 60.5
+    feedback:
+      on_pass:
+        - '`55` counts as a number, and `7x` doesn''t. Your program told them apart.'
+      on_fail:
+        - |-
+          A whole number like `55` is still a valid reading, because `hasNextDouble()` is true for it.
+
+          A token like `7x` starts with a digit but isn't a number. `hasNextDouble()` is false for it, so skip it.
+elements:
+  - type: locked
+    location:
+      snippet: |-
+        import java.io.*;
+        import java.util.*;
+
+        public class Main {
+            // Test setup: creates readings.txt. Don't change.
+            static {
+                try {
+                    java.nio.file.Files.copy(System.in,
+                        java.nio.file.Paths.get("readings.txt"),
+                        java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+  - type: editable
+    location:
+      snippet: |2-
+            public static void main(String[] args) throws FileNotFoundException {
+                Scanner input = new Scanner(new FileInputStream("readings.txt"));
+                int valid = 0;
+                int errors = 0;
+                double highest = 0.0;
+                while (input.hasNext()) {
+                    if (input.hasNextDouble()) {
+                        double reading = input.nextDouble();
+                        if (valid == 0 || reading > highest) {
+                            highest = reading;
+                        }
+                        valid++;
+                    } else {
+                        input.next();
+                        errors++;
+                    }
+                }
+                System.out.println("Valid readings: " + valid);
+                System.out.println("Errors: " + errors);
+                System.out.printf("Highest: %.1f\n", highest);
+            }
+    placeholder: |2-
+          // Write main here.
+  - type: locked
+    location:
+      snippet: '}'
+  - type: fold
+    location:
+      snippet: |2-
+            // Test setup: creates readings.txt. Don't change.
+            static {
+                try {
+                    java.nio.file.Files.copy(System.in,
+                        java.nio.file.Paths.get("readings.txt"),
+                        java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+    summary: "Test setup: creates readings.txt. Don't change."
+    collapsed: true

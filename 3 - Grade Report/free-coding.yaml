@@ -1,0 +1,169 @@
+$schema: https://adapt2.sis.pitt.edu/cupcake/schemas/free-coding/0.1.0
+license: MIT
+locale: en-US
+id: grade_report_file_input
+title: Grade Report
+description: Read records of a name and three scores from a file and print each average.
+source: Main.java
+authors:
+  - first: Bita
+    last: Akram
+    email: bita.akram@gmail.com
+    affiliation: NC State University
+pedagogy:
+  activity: free-coding
+  difficulty: novice
+  prereq_topics:
+    - scanner-input
+    - while-loops
+    - printf
+  topics:
+    - file-input
+    - fileinputstream
+    - throws-clause
+    - token-processing
+    - hasnext-methods
+runtime:
+  language: java
+  version: 17
+statement: |
+  Each record in `grades.txt` is a student's name followed by three exam scores. The number of students is different in every file.
+
+  Write `main` so it reads `grades.txt` and prints each student's name and average score with one decimal place.
+
+  **Example**
+
+  `grades.txt`:
+  ```
+  Ana 90 85 77
+  Ben 70 80 90
+  Cy 100 95 98
+  ```
+  Output:
+  ```
+  Ana: 84.0
+  Ben: 80.0
+  Cy: 97.7
+  ```
+hints:
+  - Loop with `while (input.hasNext())`. Each pass through the loop reads one whole record.
+  - Inside the loop, read the name with `next()`, then the three scores with `nextInt()`.
+  - A Scanner ignores line breaks, so a record doesn't have to be on one line.
+  - Dividing an `int` sum by `3` is integer division. Divide by `3.0` instead.
+testcases:
+  - title: Three Students
+    visible: true
+    stdin:
+      - Ana 90 85 77
+      - Ben 70 80 90
+      - Cy 100 95 98
+    stdout: |-
+      Ana: 84.0
+      Ben: 80.0
+      Cy: 97.7
+    console: |-
+      Ana: 84.0
+      Ben: 80.0
+      Cy: 97.7
+    feedback:
+      on_pass:
+        - You read each record as a name followed by three scores.
+      on_fail:
+        - |-
+          If Cy's average printed `97.0`, you used integer division. Divide by `3.0`.
+
+          If you got an InputMismatchException, your reads are out of order. Read the name with `next()` before the three `nextInt()` calls.
+  - title: One Student
+    visible: true
+    stdin:
+      - Dee 88 92 79
+    stdout: 'Dee: 86.3'
+    console: 'Dee: 86.3'
+    feedback:
+      on_pass:
+        - Your program works for a file with one record.
+      on_fail:
+        - 'Print the name, a colon, a space, and the average with one decimal place, like `Dee: 86.3`.'
+  - title: Records Across Lines (hidden)
+    visible: false
+    stdin:
+      - Eli
+      - 75 80
+      - 85 Fay 60
+      - 70 80
+    stdout: |-
+      Eli: 80.0
+      Fay: 70.0
+    console: |-
+      Eli: 80.0
+      Fay: 70.0
+    feedback:
+      on_pass:
+        - Line breaks didn't matter. You read the records token by token.
+      on_fail:
+        - Don't read a line at a time. Read one name and three scores per record, whatever lines they're on.
+  - title: Averages With Fractions (hidden)
+    visible: false
+    stdin:
+      - Gus 99 98 98
+      - Hal 1 0 0
+    stdout: |-
+      Gus: 98.3
+      Hal: 0.3
+    console: |-
+      Gus: 98.3
+      Hal: 0.3
+    feedback:
+      on_pass:
+        - Your averages kept their fractions and rounded correctly.
+      on_fail:
+        - '`98.3` and `0.3` need the fraction. Divide by `3.0`, not `3`.'
+elements:
+  - type: locked
+    location:
+      snippet: |-
+        import java.io.*;
+        import java.util.*;
+
+        public class Main {
+            // Test setup: creates grades.txt. Don't change.
+            static {
+                try {
+                    java.nio.file.Files.copy(System.in,
+                        java.nio.file.Paths.get("grades.txt"),
+                        java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+  - type: editable
+    location:
+      snippet: |2-
+            public static void main(String[] args) throws FileNotFoundException {
+                Scanner input = new Scanner(new FileInputStream("grades.txt"));
+                while (input.hasNext()) {
+                    String name = input.next();
+                    int sum = input.nextInt() + input.nextInt() + input.nextInt();
+                    System.out.printf("%s: %.1f\n", name, sum / 3.0);
+                }
+            }
+    placeholder: |2-
+          // Write main here.
+  - type: locked
+    location:
+      snippet: '}'
+  - type: fold
+    location:
+      snippet: |2-
+            // Test setup: creates grades.txt. Don't change.
+            static {
+                try {
+                    java.nio.file.Files.copy(System.in,
+                        java.nio.file.Paths.get("grades.txt"),
+                        java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+    summary: 'Test setup: creates grades.txt. Don''t change.'
+    collapsed: true

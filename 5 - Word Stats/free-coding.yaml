@@ -1,0 +1,172 @@
+$schema: https://adapt2.sis.pitt.edu/cupcake/schemas/free-coding/0.1.0
+license: MIT
+locale: en-US
+id: word_stats_file_input
+title: Word Stats
+description: Read every token of a file as a String to count the words and find the longest one.
+source: Main.java
+authors:
+  - first: Bita
+    last: Akram
+    email: bita.akram@gmail.com
+    affiliation: NC State University
+pedagogy:
+  activity: free-coding
+  difficulty: novice
+  prereq_topics:
+    - scanner-input
+    - while-loops
+    - strings
+  topics:
+    - file-input
+    - fileinputstream
+    - throws-clause
+    - token-processing
+    - hasnext-methods
+runtime:
+  language: java
+  version: 17
+statement: |
+  A word is any token in a file, so `42` and `well,` each count as one word.
+
+  Write `main` so it reads `essay.txt` and prints how many words it has and its longest word. If several words tie for longest, print the first one. Every file has at least one word.
+
+  **Example**
+
+  `essay.txt`:
+  ```
+  The quick brown
+  fox jumps over
+  the lazy dog
+  ```
+  Output:
+  ```
+  Words: 9
+  Longest: quick
+  ```
+hints:
+  - Loop with `while (input.hasNext())` and read each token with `next()`. Every token is a word, so you never need `hasNextInt()` here.
+  - Keep the longest word so far in a `String` variable, and compare lengths with `.length()`.
+  - Replace the longest word only when the new word is strictly longer. Using `>=` would keep the last of several tied words, not the first.
+testcases:
+  - title: Short Sentence
+    visible: true
+    stdin:
+      - The quick brown
+      - fox jumps over
+      - the lazy dog
+    stdout: |-
+      Words: 9
+      Longest: quick
+    console: |-
+      Words: 9
+      Longest: quick
+    feedback:
+      on_pass:
+        - You counted every token and kept the first of the five-letter words.
+      on_fail:
+        - If Longest is `jumps`, you replaced the longest word on a tie. Use `>`, not `>=`.
+  - title: One Word
+    visible: true
+    stdin:
+      - Hello
+    stdout: |-
+      Words: 1
+      Longest: Hello
+    console: |-
+      Words: 1
+      Longest: Hello
+    feedback:
+      on_pass:
+        - Your program works for a file with a single word.
+      on_fail:
+        - Check that both labels match exactly, including the colon and the space after it.
+  - title: Numbers and Punctuation (hidden)
+    visible: false
+    stdin:
+      - 42 is the
+      - answer, really.
+    stdout: |-
+      Words: 5
+      Longest: answer,
+    console: |-
+      Words: 5
+      Longest: answer,
+    feedback:
+      on_pass:
+        - Numbers and punctuation are part of tokens, and you treated them that way.
+      on_fail:
+        - Read every token with `next()`, including numbers. `answer,` with its comma is 7 characters long.
+  - title: Long Word Last (hidden)
+    visible: false
+    stdin:
+      - a bb
+      - ''
+      - '  ccc dddd'
+      - extraordinary
+    stdout: |-
+      Words: 5
+      Longest: extraordinary
+    console: |-
+      Words: 5
+      Longest: extraordinary
+    feedback:
+      on_pass:
+        - You checked every word, including the last one.
+      on_fail:
+        - Make sure your loop runs until `hasNext()` is false, so the last word is checked too.
+elements:
+  - type: locked
+    location:
+      snippet: |-
+        import java.io.*;
+        import java.util.*;
+
+        public class Main {
+            // Test setup: creates essay.txt. Don't change.
+            static {
+                try {
+                    java.nio.file.Files.copy(System.in,
+                        java.nio.file.Paths.get("essay.txt"),
+                        java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+  - type: editable
+    location:
+      snippet: |2-
+            public static void main(String[] args) throws FileNotFoundException {
+                Scanner input = new Scanner(new FileInputStream("essay.txt"));
+                int count = 0;
+                String longest = "";
+                while (input.hasNext()) {
+                    String word = input.next();
+                    count++;
+                    if (word.length() > longest.length()) {
+                        longest = word;
+                    }
+                }
+                System.out.println("Words: " + count);
+                System.out.println("Longest: " + longest);
+            }
+    placeholder: |2-
+          // Write main here.
+  - type: locked
+    location:
+      snippet: '}'
+  - type: fold
+    location:
+      snippet: |2-
+            // Test setup: creates essay.txt. Don't change.
+            static {
+                try {
+                    java.nio.file.Files.copy(System.in,
+                        java.nio.file.Paths.get("essay.txt"),
+                        java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+    summary: "Test setup: creates essay.txt. Don't change."
+    collapsed: true

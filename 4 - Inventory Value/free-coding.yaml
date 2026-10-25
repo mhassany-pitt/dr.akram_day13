@@ -1,0 +1,180 @@
+$schema: https://adapt2.sis.pitt.edu/cupcake/schemas/free-coding/0.1.0
+license: MIT
+locale: en-US
+id: inventory_value_file_input
+title: Inventory Value
+description: Read records whose item names can have several words and total the inventory value.
+source: Main.java
+authors:
+  - first: Bita
+    last: Akram
+    email: bita.akram@gmail.com
+    affiliation: NC State University
+pedagogy:
+  activity: free-coding
+  difficulty: novice
+  prereq_topics:
+    - scanner-input
+    - while-loops
+    - if-else
+    - printf
+  topics:
+    - file-input
+    - fileinputstream
+    - throws-clause
+    - token-processing
+    - hasnext-methods
+    - skipping-bad-tokens
+runtime:
+  language: java
+  version: 17
+statement: |
+  Each line of `inventory.txt` is a quantity, a unit price, and an item name. Item names can have one or more words, and they never contain numbers.
+
+  Write `main` so it reads `inventory.txt` and prints how many items there are and the total value of the inventory (quantity times price, added up) with two decimal places.
+
+  **Example**
+
+  `inventory.txt`:
+  ```
+  12 2.50 Blue pen
+  3 15.00 Desk lamp
+  40 0.25 Paper clip
+  ```
+  Output:
+  ```
+  Items: 3
+  Total value: $85.00
+  ```
+hints:
+  - You don't know how many words each name has, so you can't read a fixed number of tokens per record.
+  - 'Loop with `while (input.hasNext())`. If `hasNextInt()` is true, a new record starts: read the quantity with `nextInt()` and the price with `nextDouble()`.'
+  - Otherwise the token is part of a name. Read it with `next()` and ignore it.
+  - 'Print the total with `printf("Total value: $%.2f\n", total)`.'
+testcases:
+  - title: Three Items
+    visible: true
+    stdin:
+      - 12 2.50 Blue pen
+      - 3 15.00 Desk lamp
+      - 40 0.25 Paper clip
+    stdout: |-
+      Items: 3
+      Total value: $85.00
+    console: |-
+      Items: 3
+      Total value: $85.00
+    feedback:
+      on_pass:
+        - You used `hasNextInt()` to find where each record starts, and skipped the name words.
+      on_fail:
+        - |-
+          If you got an InputMismatchException, you read a fixed number of tokens per record. Names can have different numbers of words, so skip name tokens with `next()` until `hasNextInt()` is true.
+
+          If Items is too large, you may be counting the price as a new record. After reading the quantity, read the price with `nextDouble()` right away.
+  - title: One Long Name
+    visible: true
+    stdin:
+      - 5 4.00 Large red spiral notebook
+    stdout: |-
+      Items: 1
+      Total value: $20.00
+    console: |-
+      Items: 1
+      Total value: $20.00
+    feedback:
+      on_pass:
+        - Your program skipped all four words of the name.
+      on_fail:
+        - A name can have any number of words. Keep skipping tokens until the next one is an int.
+  - title: Whole-Number Price (hidden)
+    visible: false
+    stdin:
+      - 2 3 Mug
+      - 7 1.99 Glue stick
+    stdout: |-
+      Items: 2
+      Total value: $19.93
+    console: |-
+      Items: 2
+      Total value: $19.93
+    feedback:
+      on_pass:
+        - A price like `3` was still read as the price, not as a new quantity.
+      on_fail:
+        - After reading a quantity, the next token is always the price, even when it looks like a whole number. Read it with `nextDouble()` right after the quantity.
+  - title: Uneven Spacing (hidden)
+    visible: false
+    stdin:
+      - '  10   1.10   Eraser'
+      - ''
+      - 6   2.25 Index    cards
+    stdout: |-
+      Items: 2
+      Total value: $24.50
+    console: |-
+      Items: 2
+      Total value: $24.50
+    feedback:
+      on_pass:
+        - Extra spaces and blank lines didn't affect your totals.
+      on_fail:
+        - Don't read a line at a time. Read token by token and use `hasNextInt()` to find each new record.
+elements:
+  - type: locked
+    location:
+      snippet: |-
+        import java.io.*;
+        import java.util.*;
+
+        public class Main {
+            // Test setup: creates inventory.txt. Don't change.
+            static {
+                try {
+                    java.nio.file.Files.copy(System.in,
+                        java.nio.file.Paths.get("inventory.txt"),
+                        java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+  - type: editable
+    location:
+      snippet: |2-
+            public static void main(String[] args) throws FileNotFoundException {
+                Scanner input = new Scanner(new FileInputStream("inventory.txt"));
+                int items = 0;
+                double total = 0.0;
+                while (input.hasNext()) {
+                    if (input.hasNextInt()) {
+                        int qty = input.nextInt();
+                        double price = input.nextDouble();
+                        total = total + qty * price;
+                        items++;
+                    } else {
+                        input.next();
+                    }
+                }
+                System.out.println("Items: " + items);
+                System.out.printf("Total value: $%.2f\n", total);
+            }
+    placeholder: |2-
+          // Write main here.
+  - type: locked
+    location:
+      snippet: '}'
+  - type: fold
+    location:
+      snippet: |2-
+            // Test setup: creates inventory.txt. Don't change.
+            static {
+                try {
+                    java.nio.file.Files.copy(System.in,
+                        java.nio.file.Paths.get("inventory.txt"),
+                        java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+    summary: "Test setup: creates inventory.txt. Don't change."
+    collapsed: true
